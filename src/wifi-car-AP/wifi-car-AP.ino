@@ -37,7 +37,7 @@ const char* serverIndex = "<form method='POST' action='/update' enctype='multipa
 // comment next line for Station Access to WiFi router
 #define ACCESSPOINT
 #ifdef ACCESSPOINT
-const char* ssid = "wifi-car";
+const char* ssid = "altlab-car";
 const char* password = "";
 
 #else
@@ -219,23 +219,10 @@ void handleMotor() {
   String backMotorText = server.arg(0);
   String frontMotorText = server.arg(1);
   
-  // DBG_OUTPUT_PORT.println("[" + leftText + "][" + rightText + "]");
+  DBG_OUTPUT_PORT.println("[" + backMotorText + "][" + frontMotorText + "]");
   
   int backMotor = backMotorText.toInt();
   int frontMotor = frontMotorText.toInt();
-  
-  /*
-  if (backMotor < 0) {
-    motorAForward = 0;
-  } else {
-    motorAForward = 1;
-  }
-  if (frontMotor < 0) {
-    motorBForward = 0;
-  } else {
-    motorBForward = 1;
-  }
-  */
   
   analogWrite(5, abs(backMotor));      // was left
   analogWrite(4, abs(frontMotor));     // was right
@@ -291,19 +278,10 @@ void setup() {
 #endif
 
   //---------------- Server init
-  // list directory
   server.on("/list", HTTP_GET, handleFileList);
-  // create file
   server.on("/create", handleFileCreate);
-  //delete file
   server.on("/delete", HTTP_GET, handleFileDelete);
-  // called after file upload
-  //server.on("/edit", HTTP_POST, [](){ server.send(200, "text/plain", ""); });
 
-  // Format Flash ROM - too dangerous!
-  // server.on ( "/format", handleFormat );
-  
-  // get filename from client for upload; setup is also handle
   server.on("/upload", HTTP_GET, []() {
     server.sendHeader("Connection", "close");
     server.sendHeader("Access-Control-Allow-Origin", "*");
